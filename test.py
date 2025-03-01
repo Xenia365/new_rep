@@ -806,7 +806,6 @@ haus.take_from_warehouse(mobile_1, 5)
 print(haus.all_items[1])
 print(mobile_1.counter)
 #haus.delete_item(mobile_1)
-print(haus.all_items[1])
 
 
 
