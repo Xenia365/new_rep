@@ -13,6 +13,8 @@
 # print(eval('repr(p)'))
 #from socket import send_fds
 #from tkinter.font import names
+from contextlib import suppress
+from platform import processor
 from statistics import quantiles
 
 
@@ -675,137 +677,300 @@ from statistics import quantiles
 # print(f"a = {a}")
 #
 
+#
+# class Item:
+#
+#     def __init__(self, name, price):
+#         self.name = name
+#         self._quantity = 0
+#         self._price = price
+#         self.counter = None
+#
+#     def __str__(self):
+#         return f'Item: {self.name}, quantity: {self._quantity}'
+#
+#     def take_item(self, n_quantity):
+#         if n_quantity > self._quantity:
+#             raise 'Not enough items in warehouse'
+#         else:
+#             self._quantity = self._quantity - n_quantity
+#             return self._quantity
+#
+#
+#     def check_quantity(self):
+#         if self._quantity == 0:
+#             return 0
+#         else:
+#             return self._quantity
+#
+#     def set_id(self, counter1):
+#         self.counter = counter1
+#
+#     def del_id(self):
+#         self.counter = None
+#
+#     def adding(self, n_quantity):
+#         self._quantity += n_quantity
+#         return self
+#
+#     def spisanie(self):
+#         self._quantity = 0
+#         return "Done! Quantity is 0!"
+#
+#     def _set_price(self, value):
+#         if value > 0:
+#             self._price = value
+#         else:
+#             print('Price must be more than 0')
+#
+#     def _get_price(self):
+#         return self._price
+#
+#     price = property(fget=_get_price, fset=_set_price, fdel=None, doc='None')
+#
+#
+#
+#
+# class Phone(Item):
+#
+#     def __init__(self,  name, category, price):
+#         super().__init__(name, price)
+#         self.category = category
+#
+#     def __str__(self):
+#         return f'{super().__str__()}, Category: {self.category}'
+#
+#
+#
+#
+# class Warehouse:
+#
+#     def __init__(self):
+#         self.all_items = {}
+#         self.counter = 1
+#
+#     def add(self, item, n_quantity): #добавить
+#         if item.name in self.all_items.values(): #проверка если уже есть такой товар
+#             return Item.adding(item, n_quantity)   #если есть, то меняет только количество
+#         else:
+#             self.all_items[self.counter] = Item.adding(item, n_quantity)
+#             Item.set_id(item, self.counter)
+#             with open('newfile.txt', 'w', encoding='utf-8') as g:
+#                 g.write(f'Added: {item}')
+#             self.counter += 1
+#
+#     def __str__(self):
+#         for k in self.all_items.keys():
+#             print(f'{self.all_items[k]}\n')
+#
+#     @staticmethod
+#     def take_from_warehouse(n_item, n_quantity):
+#         if Item.check_quantity(n_item):
+#             return Item.take_item(n_item, n_quantity)
+#         else:
+#             return print('No such items in warehouse')
+#
+#     @staticmethod
+#     def checker(n_item):
+#         return Item.check_quantity(n_item)
+#
+#     @staticmethod
+#     def spisat(n_item):
+#         return Item.spisanie(n_item)
+#
+#     def delete_item(self, n_item):
+#         assert n_item.counter != None, 'No such item in warehouse'
+#         del self.all_items[n_item.counter]
+#         Item.del_id(n_item)
+#         with open('newfile.txt', 'w', encoding='utf-8') as g:
+#             g.write(f'Deleted: {n_item}')
+#
+#
+#
+#
+#
+#
+# mobile_1 = Phone('Iphone 16', 'Phones', 100000)
+# mobile_2 = Phone('Iphone 1', 'Phones', 100000)
+#
+# mobile_1.price = -999999
+# print(mobile_1.price)
+#
+#
+#
+#
+# haus = Warehouse()
+#
+# haus.add(mobile_1, 10)
+# haus.take_from_warehouse(mobile_1, 5)
+#
+# print(haus.all_items[1])
+# print(mobile_1.counter)
+# #haus.delete_item(mobile_1)
 
-class Item:
 
-    def __init__(self, name, price):
+
+class Task:
+
+    def __init__(self, name, priority):
         self.name = name
-        self._quantity = 0
-        self._price = price
-        self.counter = None
+        if self.check_priority(priority):
+            self._priority = priority
+        self._status = 'Undone'
+        self.task_id = None
 
-    def __str__(self):
-        return f'Item: {self.name}, quantity: {self._quantity}'
-
-    def take_item(self, n_quantity):
-        if n_quantity > self._quantity:
-            raise 'Not enough items in warehouse'
-        else:
-            self._quantity = self._quantity - n_quantity
-            return self._quantity
-
-
-    def check_quantity(self):
-        if self._quantity == 0:
-            return 0
-        else:
-            return self._quantity
-
-    def set_id(self, counter1):
-        self.counter = counter1
+    def add_id(self, todolist_id):
+        self.task_id = todolist_id
+        return print(f'New task added: {self}')
 
     def del_id(self):
-        self.counter = None
+        self.task_id = None
+        return print('Task has been deleted')
 
-    def adding(self, n_quantity):
-        self._quantity += n_quantity
-        return self
+    def c_status(self, new_status):
+        self._status = new_status
+        return self._status
 
-    def spisanie(self):
-        self._quantity = 0
-        return "Done! Quantity is 0!"
+    def get_priority(self):
+        return self._priority
 
-    def _set_price(self, value):
-        if value > 0:
-            self._price = value
+    @staticmethod
+    def check_priority(x):
+        if x not in (1, 2, 3, 4, 5):
+            raise ValueError('You need to use priority 1 - 5')
         else:
-            print('Price must be more than 0')
+            return True
 
-    def _get_price(self):
-        return self._price
+    def c_priority(self, new_priority):
+        if self.check_priority(new_priority):
+            self._priority = new_priority
+            return self._priority
 
-    price = property(fget=_get_price, fset=_set_price, fdel=None, doc='None')
+    def get_status(self):
+        return self._status
+
+    @staticmethod
+    def set_status(self, new_status):
+        return print(f'You can not change {self._status} status to {new_status}')
 
 
-
-
-class Phone(Item):
-
-    def __init__(self,  name, category, price):
-        super().__init__(name, price)
-        self.category = category
-
-    def __str__(self):
-        return f'{super().__str__()}, Category: {self.category}'
-
+    status = property(fget=get_status, fset=set_status)
+    priority = property(fget=get_priority, fset=c_priority)
 
 
 
-class Warehouse:
+class DevelopersTask(Task):
+
+    def __init__(self, name, priority, project_name,):
+        super().__init__(name, priority)
+        self.project_name = project_name
+
+
+
+class ToDoList:
 
     def __init__(self):
-        self.all_items = {}
+        self.all_tasks = {}
         self.counter = 1
 
-    def add(self, item, n_quantity): #добавить
-        if item.name in self.all_items.values(): #проверка если уже есть такой товар
-            return Item.adding(item, n_quantity)   #если есть, то меняет только количество
-        else:
-            self.all_items[self.counter] = Item.adding(item, n_quantity)
-            Item.set_id(item, self.counter)
-            with open('newfile.txt', 'w', encoding='utf-8') as g:
-                g.write(f'Added: {item}')
+    def add_task(self, task):
+        if task not in self.all_tasks.values():
+            self.all_tasks[self.counter] = task
+            task.add_id(self.counter)
             self.counter += 1
-
-    def __str__(self):
-        for k in self.all_items.keys():
-            print(f'{self.all_items[k]}\n')
-
-    @staticmethod
-    def take_from_warehouse(n_item, n_quantity):
-        if Item.check_quantity(n_item):
-            return Item.take_item(n_item, n_quantity)
         else:
-            return print('No such items in warehouse')
+            print('This task is already in ToDoList')
+
+    def delete_task(self, task):
+        if task in self.all_tasks.values():
+            del self.all_tasks[task.task_id]
+            return task.del_id()
+        else:
+            print('No such task in ToDoList')
+
 
     @staticmethod
-    def checker(n_item):
-        return Item.check_quantity(n_item)
+    def change_status(task, new_status):
+        if task._status == new_status:
+            print('Same status, you can not change it')
+        else:
+           return task.c_status(new_status)
 
     @staticmethod
-    def spisat(n_item):
-        return Item.spisanie(n_item)
+    def change_priority(task, new_priority):
+        if task._priority == new_priority:
+            print('Same priority, you can not change it')
+        else:
+           return task.c_priority(new_priority)
 
-    def delete_item(self, n_item):
-        assert n_item.counter != None, 'No such item in warehouse'
-        del self.all_items[n_item.counter]
-        Item.del_id(n_item)
-        with open('newfile.txt', 'w', encoding='utf-8') as g:
-            g.write(f'Deleted: {n_item}')
-
-    def logger(self,item):
-        self.file.write(f'{item}\n')
+    def filter(self, status):
+        founded = {k: v for k, v in self.all_tasks.items() if status == v._status or status == v._priority}
+        return f'Witn {status} were founded: {founded}'
 
 
+first_list =  ToDoList()
+
+first_task = DevelopersTask('To make a new repository for project', 1, 'Doodle')
+first_task.status = 'Done'
+print(first_task.status)
+
+first_list.add_task(first_task)
 
 
-mobile_1 = Phone('Iphone 16', 'Phones', 100000)
-mobile_2 = Phone('Iphone 1', 'Phones', 100000)
-
-mobile_1.price = -999999
-print(mobile_1.price)
+first_task.priority = 3
+print(first_task.priority)
 
 
-
-
-haus = Warehouse()
-
-haus.add(mobile_1, 10)
-haus.take_from_warehouse(mobile_1, 5)
-
-print(haus.all_items[1])
-print(mobile_1.counter)
-#haus.delete_item(mobile_1)
+print(first_list.filter(3))
 
 
 
+def divide_numbers(x, y):
+    try:
+        return x / y
+    except (ZeroDivisionError(), ValueError()):
+        print('Use correct value')
+    finally:
+        print('Operation passed')
+
+
+print(divide_numbers(5,10))
+
+
+
+h = 22
+print(h.__class__)
+
+
+def calculate_discount(x, y):
+    assert x >= 0, 'Wrong condition, arg x must be non negative'
+    assert y in range(1, 101), 'Wrong condition, arg y not in range 1-100'
+    return x - x * (y / 100)
+
+
+
+
+
+def process_data(x):
+    with x as file:
+        try:
+            for line in file:
+                assert line.__class__ == 'dict', 'Line must be dictionary'
+                line.read('\n')
+        except (FileNotFoundError(), UnicodeDecodeError()):
+            print('Exceptions found')
+
+def check_even_number(number):
+    try:
+        if not isinstance(number, int):
+            raise TypeError("Ожидается целое число")
+        if number % 2 != 0:
+            raise ValueError("Число нечетное")
+    except TypeError as e:
+        print(f"Ошибка: {e}")
+    except ValueError as e:
+        print(f"Ошибка: {e}")
+    else:
+        print(f"Число {number} четное")
+    finally:
+        print("Проверка завершена")
